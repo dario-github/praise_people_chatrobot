@@ -13,44 +13,49 @@ import json
     Constants
 """
 
-REPLY = {'夸我': ['你真是太优秀！',
-		'啥也不说了，夸！',
-		'每天看到你心情好呢！',
-		'你真是一位可爱的小天使啊！',
-		'一看你就是美丽与善良的化身 夸！',			  
-		'你上辈子一定拯救了银河系吧，优秀！',
-		'德才兼备说的就是你这样的社会主义接班人！',
-		'以后你就是夸夸群里的元老，就是夸夸之父，简称夸父！',
-		'你这句话完美的表达了你想被夸的坚定信念，你一定是一个执着追求自己理想的人！'],
-         'default': ['太棒了！',
-		     '真不错！',
+kua_list = []
+with open ("kua.txt", "r", encoding='utf-8') as f:
+	for line in f:
+		kua_list.append(line.strip())
+		
+REPLY = {'夸我': kua_list,
+         'default': 
+         ['你真是太棒了！',
+		     '你真不错！',
 		     '好开心！',
-		     '嗯哪！',
-		     '没什么好说的了，我送你一道彩虹屁吧！']}
+		     '嗯哪！']}
 
-@itchat.msg_register([TEXT], isGroupChat=True)
+# @itchat.msg_register([TEXT], isGroupChat=True)
+@itchat.msg_register([TEXT], isFriendChat=True, isGroupChat=True)
+# @itchat.msg_register([TEXT])
 def text_reply(msg):
-    # 这里一定要修改成你想加群的群的名称  
-    if msg['User']['NickName'] == '改成 群名称':
-        print('Message from: %s' % msg['User']['NickName'])
-        # 发送者的昵称
-        username = msg['ActualNickName']
-        print('Who sent it: %s' % username)
-
-        match = re.search('夸我', msg['Text']) or re.search('求夸', msg['Text']) or re.search('夸一下', msg['Text'])
-        if match:
-            print('-+-+' * 5)
-            print('Message content:%s' % msg['Content'])
-            print('夸我 is: %s' % (match is not None))
-            randomIdx = random.randint(0, len(REPLY['夸我']) - 1)
-            itchat.send('@' + '%s\n%s' % (username, REPLY['夸我'][randomIdx]), msg['FromUserName'])
-
-        print('isAt is:%s' % msg['isAt'])
-
-        if msg['isAt']:
-            randomIdx = random.randint(0, len(REPLY['default']) - 1)
-            itchat.send('@' + '%s\n%s' % (username, REPLY['default'][randomIdx]), msg['FromUserName'])
-            print('-+-+'*5)
+    # 这里一定要修改成你想加群的群的名称
+    if msg['User']['NickName'] in ('kaggle冲刺群', '我爱我家', 'Pati\U0001f955'):
+        user = msg['User'].get('NickName')
+        if not user:
+            pass
+        else:
+            print('Message from: {}}'.format(user))
+            # 发送者的昵称
+            username = msg.get('ActualNickName', msg['user'].get('RemarkName'))
+            print('Who sent it: %s' % username)
+    
+            match = re.search('夸我|求夸|夸一下|夸一下|夸', msg['Text'])
+            if match:
+                print('-+-+' * 5)
+                print('Message content:{}'.format(msg['Content']))
+                print('夸我 is: %s' % (match is not None))
+                randomIdx = random.randint(0, len(REPLY['夸我']) - 1)
+                itchat.send('@' + '{}\n{}'.format(username, REPLY['夸我'][randomIdx]), msg['FromUserName'])
+		  # else:
+		  # 	randomIdx = random.randint(0, len(REPLY['default']) - 1)
+		  # 	itchat.send('@' + '%s\n%s' % (username, REPLY['default'][randomIdx]), msg['FromUserName'])
+            print('isAt is:%s' % msg['isAt'])
+    
+            if msg['isAt']:
+                randomIdx = random.randint(0, len(REPLY['default']) - 1)
+                itchat.send('@' + '{}\n{}'.format(username, REPLY['default'][randomIdx]), msg['FromUserName'])
+                print('-+-+'*5)
 
 itchat.auto_login(enableCmdQR=True, hotReload=True)
 itchat.run()
