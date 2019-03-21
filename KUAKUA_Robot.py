@@ -35,9 +35,9 @@ def text_reply(msg):
         if not user:
             pass
         else:
-            print('Message from: {}}'.format(user))
+            print("Message from: %s" % user.encode('utf-8'))
             # 发送者的昵称
-            username = msg.get('ActualNickName', msg['user'].get('RemarkName'))
+            username = msg.get('ActualNickName', msg['User'].get('RemarkName'))
             print('Who sent it: %s' % username)
     
             match = re.search('夸我|求夸|夸一下|夸一下|夸', msg['Text'])
@@ -46,15 +46,17 @@ def text_reply(msg):
                 print('Message content:{}'.format(msg['Content']))
                 print('夸我 is: %s' % (match is not None))
                 randomIdx = random.randint(0, len(REPLY['夸我']) - 1)
-                itchat.send('@' + '{}\n{}'.format(username, REPLY['夸我'][randomIdx]), msg['FromUserName'])
+                # itchat.send('@' + '{}\n{}'.format(username, REPLY['夸我'][randomIdx]), msg['FromUserName'])
+                itchat.send('{}'.format(REPLY['夸我'][randomIdx]), msg['FromUserName'])
 		  # else:
 		  # 	randomIdx = random.randint(0, len(REPLY['default']) - 1)
 		  # 	itchat.send('@' + '%s\n%s' % (username, REPLY['default'][randomIdx]), msg['FromUserName'])
-            print('isAt is:%s' % msg['isAt'])
+            print('isAt is:%s' % msg.get('isAt'))
     
-            if msg['isAt']:
+            if msg.get('isAt'):
                 randomIdx = random.randint(0, len(REPLY['default']) - 1)
-                itchat.send('@' + '{}\n{}'.format(username, REPLY['default'][randomIdx]), msg['FromUserName'])
+                # itchat.send('@' + '{}\n{}'.format(username, REPLY['default'][randomIdx]), msg['FromUserName'])
+                itchat.send('{}'.format(REPLY['default'][randomIdx]), msg['FromUserName'])
                 print('-+-+'*5)
 
 itchat.auto_login(enableCmdQR=True, hotReload=True)
