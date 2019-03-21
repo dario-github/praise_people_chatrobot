@@ -30,7 +30,7 @@ REPLY = {'夸我': kua_list,
 # @itchat.msg_register([TEXT])
 def text_reply(msg):
     # 这里一定要修改成你想加群的群的名称
-    if msg['User']['NickName'] in ('kaggle冲刺群', '我爱我家', 'Pati\U0001f955'):
+    if msg['User']['NickName'] in ('kaggle冲刺群', '我爱我家', 'Pati\U0001f955', '陈相'):
         user = msg['User'].get('NickName')
         if not user:
             pass
